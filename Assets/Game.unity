@@ -574,21 +574,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6124045107473215820, guid: bfdc62c94ef29ae478d5a2770d42e96a,
-        type: 3}
-      propertyPath: m_Drag
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6124045107473215820, guid: bfdc62c94ef29ae478d5a2770d42e96a,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 56
-      objectReference: {fileID: 0}
-    - target: {fileID: 6124045107473215810, guid: bfdc62c94ef29ae478d5a2770d42e96a,
-        type: 3}
-      propertyPath: rcsThrust
-      value: 250
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfdc62c94ef29ae478d5a2770d42e96a, type: 3}
 --- !u!1001 &9164406259815738902
