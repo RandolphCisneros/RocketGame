@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource audioSource;
 
-    [SerializeField] float rcsThrust = 300f;
-    [SerializeField] float mainThrust = 50f;
+    [SerializeField] float rcsThrust = 100;
+    [SerializeField] float mainThrust = 100f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,11 +30,15 @@ public class Rocket : MonoBehaviour
             case "Friendly":
                 print("OK"); //todo remove
                 break;
-            case "Fuel":
-                print("Fuel + 10");//todo remove
+            case "Finish":
+                print("Hit finish");
+                SceneManager.LoadScene(1);
                 break;
+
+
             default:
-                print("Dead");//todo remove
+                print("Dead");
+                SceneManager.LoadScene(0);
                 break;
         }
     }
