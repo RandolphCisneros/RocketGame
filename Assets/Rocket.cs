@@ -6,6 +6,9 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource;
 
+    enum State { Alive, Dying, Transcending };
+    State state = State.Alive;
+
     [SerializeField] float rcsThrust = 100;
     [SerializeField] float mainThrust = 100f;
 
@@ -19,28 +22,56 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        if (state == State.Alive)
+        {
+            Thrust();
+            Rotate();
+        }
+
+        if (state == State.Dying)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+
+        if (state == State.Transcending)
+        {
+            rigidBody.freezeRotation = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(state != State.Alive) { return; }
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
                 print("OK"); //todo remove
                 break;
             case "Finish":
-                print("Hit finish");
-                SceneManager.LoadScene(1);
+                state = State.Transcending;
+                Invoke("LoadNextLevel", 1f); //parameterise time, 
                 break;
 
 
             default:
-                print("Dead");
-                SceneManager.LoadScene(0);
+                state = State.Dying;
+                Invoke("LoadFirstLevel", 2f);
                 break;
         }
+    }
+
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextLevel()
+    {
+        SceneManager.LoadScene(1);
     }
 
     private void Thrust()
@@ -70,10 +101,10 @@ public class Rocket : MonoBehaviour
             transform.Rotate(Vector3.forward * rotationThisFrame);
         }
         else if (Input.GetKey(KeyCode.D))
-        { 
+        {
             transform.Rotate(-Vector3.forward * rotationThisFrame);
         }
-
+    
         rigidBody.freezeRotation = false;
     }
 }
