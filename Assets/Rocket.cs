@@ -3,19 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
+    [SerializeField] float rcsThrust = 100;
+    [SerializeField] float mainThrust = 100f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip success;
+    [SerializeField] AudioClip death;
+
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem successParticles;
+    [SerializeField] ParticleSystem deathParticles;
+
     Rigidbody rigidBody;
     AudioSource audioSource;
 
     enum State { Alive, Dying, Transcending };
     State state = State.Alive;
-    State lastState;
-
-    [SerializeField] float rcsThrust = 100;
-    [SerializeField] float mainThrust = 100f;
-
-    [SerializeField] AudioClip mainEngine;
-    [SerializeField] AudioClip success;
-    [SerializeField] AudioClip death;
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +48,6 @@ public class Rocket : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                // do nothing
                 break;
             case "Finish":
                 StartSuccessSequence();
@@ -63,6 +64,7 @@ public class Rocket : MonoBehaviour
         state = State.Dying;
         audioSource.Stop();
         audioSource.PlayOneShot(death);
+        deathParticles.Play();
         Invoke("LoadFirstLevel", 2f);
     }
 
@@ -71,6 +73,7 @@ public class Rocket : MonoBehaviour
         state = State.Transcending;
         audioSource.Stop();
         audioSource.PlayOneShot(success);
+        successParticles.Play();
         Invoke("LoadNextLevel", 1f); //parameterise time, 
     }
 
@@ -93,6 +96,7 @@ public class Rocket : MonoBehaviour
         else
         {
             audioSource.Stop();
+            mainEngineParticles.Stop();
         }
     }
 
@@ -103,6 +107,7 @@ public class Rocket : MonoBehaviour
         {
             audioSource.PlayOneShot(mainEngine);
         }
+        mainEngineParticles.Play();
     }
 
     private void RespondToRotateInput()
