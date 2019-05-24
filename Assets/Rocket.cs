@@ -18,8 +18,10 @@ public class Rocket : MonoBehaviour
     Rigidbody rigidBody;
     AudioSource audioSource;
 
-    enum State { Alive, Dying, Transcending };
+    enum State { Alive, Dying, Transcending, Debug };
     State state = State.Alive;
+
+    bool collisionsDisabled = false;
 
     // Start is called before the first frame update
     void Start()
@@ -36,16 +38,16 @@ public class Rocket : MonoBehaviour
             RespondToThrustInput();
             RespondToRotateInput();
         }
-
-        if (state == State.Transcending)
+        
+        if (Debug.isDebugBuild)
         {
-            rigidBody.freezeRotation = true;
+            RespondToDebugKeys();
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(state != State.Alive) { return; }
+        if(state != State.Alive || !collisionsDisabled) { return; }
 
         switch (collision.gameObject.tag)
         {
@@ -87,6 +89,20 @@ public class Rocket : MonoBehaviour
     private void LoadNextLevel()
     {
         SceneManager.LoadScene(1);
+    }
+
+    private void RespondToDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // toggle collision
+            collisionsDisabled = !collisionsDisabled;
+        }
     }
 
     private void RespondToThrustInput()
