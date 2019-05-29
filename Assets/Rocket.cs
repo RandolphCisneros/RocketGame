@@ -47,7 +47,7 @@ public class Rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(state != State.Alive || !collisionsDisabled) { return; }
+        if(state != State.Alive || collisionsDisabled) { return; }
 
         switch (collision.gameObject.tag)
         {
@@ -88,7 +88,9 @@ public class Rocket : MonoBehaviour
 
     private void LoadNextLevel()
     {
-        SceneManager.LoadScene(1);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = ++currentSceneIndex == SceneManager.sceneCountInBuildSettings ? 0 : currentSceneIndex;
+        SceneManager.LoadScene(nextSceneIndex);
     }
 
     private void RespondToDebugKeys()
@@ -100,7 +102,6 @@ public class Rocket : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            // toggle collision
             collisionsDisabled = !collisionsDisabled;
         }
     }
